@@ -22,7 +22,6 @@ global class AccountEmailHandler implements Messaging.InboundEmailHandler {
             // Example: Insert a record in Salesforce (e.g., Account)
             if (!usrList.isEmpty()) {
                 validUsrId = usrList[0].Id;
-                System.debug('INBOUND TEST ONLY');
 
                 String refNum = null;
 
@@ -32,9 +31,6 @@ global class AccountEmailHandler implements Messaging.InboundEmailHandler {
                     Matcher matcher = pattern.matcher(emailSubject);
                     if (matcher.find()) {
                         refNum = matcher.group(1); // Extract the text inside the brackets
-                        System.debug('Value inside brackets: ' + refNum);
-                    } else {
-                        System.debug('No text found inside square brackets.');
                     }
                 }
 
@@ -61,7 +57,7 @@ global class AccountEmailHandler implements Messaging.InboundEmailHandler {
                             }
                             emailMsgListToCreate.add(emailMsg);
                         } else {
-                            System.debug('Cannot attach. Account is Private.');
+                            // Cannot attach. Account is Private. - Send Notification Email;
                             emailFailedToAttachNotification(emailSubject, email.fromAddress);
                         }
                     }
@@ -78,7 +74,6 @@ global class AccountEmailHandler implements Messaging.InboundEmailHandler {
 
         } catch (Exception e) {
             // Log the error and mark the email as failed
-            System.debug('Error occurred: ' + e.getMessage());
             result.success = false;
 
             // Log the error in Nebula Logger
@@ -108,8 +103,6 @@ global class AccountEmailHandler implements Messaging.InboundEmailHandler {
         }
 
         } catch (Exception e) {
-            // Log the error
-            System.debug('Error occurred: ' + e.getMessage());
 
             // Log the error in Nebula Logger
             Logger.error(e.getMessage());
